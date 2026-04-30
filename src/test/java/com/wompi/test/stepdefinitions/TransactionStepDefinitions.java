@@ -6,11 +6,12 @@ import com.wompi.test.questions.ResponseStatusCode;
 import com.wompi.test.tasks.CreateTransaction;
 import com.wompi.test.utils.SignatureGenerator;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import io.cucumber.java.es.Cuando;
+import io.cucumber.java.es.Entonces;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
@@ -18,10 +19,12 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class TransactionStepDefinitions {
 
-    @When("crea una transacción con los siguientes datos:")
+    @Cuando("crea una transacción con los siguientes datos:")
     public void createTransaction(DataTable dataTable) {
         Actor actor = OnStage.theActorInTheSpotlight();
-        Map<String, String> data = dataTable.asMaps().get(0);
+        Map<String, String> data = new HashMap<>(dataTable.asMaps().get(0));
+
+        data.put("reference", data.get("reference") + System.currentTimeMillis());
 
         String acceptanceToken = actor.recall("acceptanceToken");
         String personalAuthToken = actor.recall("personalAuthToken");
@@ -36,7 +39,7 @@ public class TransactionStepDefinitions {
         );
     }
 
-    @Then("la transacción se crea exitosamente")
+    @Entonces("la transacción se crea exitosamente")
     public void verifyTransactionCreated() {
         OnStage.theActorInTheSpotlight().should(
                 seeThat(ResponseStatusCode.value(), equalTo(201))
