@@ -1,28 +1,37 @@
 package com.wompi.test.config;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Environment {
 
     private static final String ENV_PREFIX = "WOMPI_";
+    private static final Map<String, String> dotEnvProperties = new HashMap<>();
+
+    static {
+        loadDotEnv();
+    }
 
     private Environment() {
     }
 
     public static String getPublicKey() {
-        return getRequiredEnvVar("PUBLIC_KEY");
+        return getRequiredVar("PUBLIC_KEY");
     }
 
     public static String getPrivateKey() {
-        return getRequiredEnvVar("PRIVATE_KEY");
+        return getRequiredVar("PRIVATE_KEY");
     }
 
     public static String getIntegrityKey() {
-        return getRequiredEnvVar("INTEGRITY_KEY");
+        return getRequiredVar("INTEGRITY_KEY");
     }
 
     public static String getEventKey() {
-        return getRequiredEnvVar("EVENT_KEY");
+        return getRequiredVar("EVENT_KEY");
     }
 
     public static Map<String, String> getCredentials() {
@@ -34,13 +43,36 @@ public class Environment {
         );
     }
 
-    private static String getRequiredEnvVar(String key) {
-        String value = System.getenv(ENV_PREFIX + key);
+    private static String getRequiredVar(String key) {
+        String fullKey = ENV_PREFIX + key;
+        String value = System.getenv(fullKey);
+        if (value == null || value.isBlank()) {
+            value = dotEnvProperties.get(fullKey);
+        }
         if (value == null || value.isBlank()) {
             throw new IllegalStateException(
-                    "Variable de entorno requerida no encontrada: " + ENV_PREFIX + key
-                            + ". Configúrala antes de ejecutar los tests.");
+                    "Variable requerida no encontrada: " + fullKey
+                            + ". Configúrala como variable de entorno o en el archivo .env");
         }
         return value;
+    }
+
+    private static void loadDotEnv() {
+        Path envFile = Path.of(".env");
+        if (!Files.exists(envFile)) {
+            return;
+        }
+        try {
+            Files.readAllLines(envFile).stream()
+                    .filter(line -> !line.isBlank() && !line.startsWith("#") && line.contains("="))
+                    .forEach(line -> {
+                        int separator = line.indexOf('=');
+                        String envKey = line.substring(0, separator).trim();
+                        String envValue = line.substring(separator + 1).trim();
+                        dotEnvProperties.put(envKey, envValue);
+                    });
+        } catch (IOException e) {
+            throw new IllegalStateException("Error leyendo archivo .env", e);
+        }
     }
 }

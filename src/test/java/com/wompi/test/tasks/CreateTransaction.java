@@ -7,8 +7,6 @@ import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.rest.interactions.Post;
 import net.serenitybdd.annotations.Step;
 
-import static net.serenitybdd.rest.SerenityRest.given;
-
 public class CreateTransaction implements Task {
 
     private final TransactionRequest request;
@@ -22,7 +20,7 @@ public class CreateTransaction implements Task {
     }
 
     @Override
-    @Step("{0} crea una transacción de tipo #request.paymentMethod.type")
+    @Step("{0} crea una transacción")
     public <T extends Actor> void performAs(T actor) {
         CallWompiApi ability = actor.abilityTo(CallWompiApi.class);
         actor.attemptsTo(

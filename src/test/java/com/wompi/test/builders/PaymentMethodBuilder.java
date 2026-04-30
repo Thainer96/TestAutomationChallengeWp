@@ -11,13 +11,16 @@ public class PaymentMethodBuilder {
 
     public static PaymentMethod build(Map<String, String> data) {
         String type = data.getOrDefault("type", "");
-        return switch (type) {
-            case "NEQUI" -> buildNequi(data);
-            case "BANCOLOMBIA_QR" -> buildBancolombiaQr(data);
-            case "PCOL" -> buildPcol(data);
-            case "BANCOLOMBIA_TRANSFER" -> buildBancolombiaTransfer(data);
-            default -> throw new IllegalArgumentException("Tipo de método de pago no soportado: " + type);
-        };
+        switch (type) {
+            case "NEQUI":
+                return buildNequi(data);
+            case "BANCOLOMBIA_QR":
+                return buildBancolombiaQr(data);
+            case "BANCOLOMBIA_TRANSFER":
+                return buildBancolombiaTransfer(data);
+            default:
+                throw new IllegalArgumentException("Tipo de método de pago no soportado: " + type);
+        }
     }
 
     private static PaymentMethod buildNequi(Map<String, String> data) {
@@ -31,13 +34,6 @@ public class PaymentMethodBuilder {
         PaymentMethod pm = new PaymentMethod();
         pm.setType("BANCOLOMBIA_QR");
         pm.setPaymentDescription(data.get("payment_description"));
-        pm.setSandboxStatus(data.get("sandbox_status"));
-        return pm;
-    }
-
-    private static PaymentMethod buildPcol(Map<String, String> data) {
-        PaymentMethod pm = new PaymentMethod();
-        pm.setType("PCOL");
         pm.setSandboxStatus(data.get("sandbox_status"));
         return pm;
     }
