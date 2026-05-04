@@ -6,7 +6,7 @@ Característica: Consulta de merchants
   Para obtener los tokens de aceptación necesarios para transacciones
 
   Antecedentes:
-    Dado un usuario en ambiente de pruebas "UAT"
+    Dado comercio en ambiente de pruebas "UAT"
 
   @Merchants
   Escenario: Consultar merchant con llave pública válida

@@ -6,7 +6,7 @@ Característica: Creación de transacciones
   Para validar el procesamiento correcto de cada tipo
 
   Antecedentes:
-    Dado un usuario en ambiente de pruebas "UAT"
+    Dado comprador en ambiente de pruebas "UAT"
     Cuando consulta el servicio de merchants con su llave pública
     Entonces el servicio de merchants responde exitosamente
     Y obtiene los tokens de aceptación

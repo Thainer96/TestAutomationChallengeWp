@@ -11,8 +11,8 @@ import net.thucydides.model.util.EnvironmentVariables;
 
 public class SetupStepDefinitions {
 
-    @Dado("un usuario en ambiente de pruebas {string}")
-    public void setupEnvironment(String environment) {
+    @Dado("{word} en ambiente de pruebas {string}")
+    public void setupEnvironment(String actorName, String environment) {
         EnvironmentVariables envVars = SystemEnvironmentVariables.createEnvironmentVariables();
         String baseUrl = envVars.getProperty(
                 "environments." + environment.toLowerCase() + ".base.url",
@@ -20,7 +20,7 @@ public class SetupStepDefinitions {
 
         String publicKey = Environment.getPublicKey();
 
-        Actor actor = OnStage.theActorCalled("usuario");
+        Actor actor = OnStage.theActorCalled(actorName);
         actor.whoCan(CallAnApi.at(baseUrl));
         actor.whoCan(CallWompiApi.withCredentials(baseUrl, publicKey));
         actor.remember("publicKey", publicKey);
