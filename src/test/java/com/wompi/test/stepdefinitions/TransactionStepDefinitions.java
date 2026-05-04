@@ -45,4 +45,11 @@ public class TransactionStepDefinitions {
                 seeThat(ResponseStatusCode.value(), equalTo(201))
         );
     }
+
+    @Entonces("la transacción es rechazada con código {int}")
+    public void verifyTransactionRejected(int expectedCode) {
+        OnStage.theActorInTheSpotlight().should(
+                seeThat(ResponseStatusCode.value(), equalTo(expectedCode))
+        );
+    }
 }

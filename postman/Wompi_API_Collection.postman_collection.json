@@ -1,0 +1,290 @@
+{
+	"info": {
+		"_postman_id": "wompi-api-test-collection",
+		"name": "Wompi API Test",
+		"description": "Colección de pruebas para las APIs de Wompi - Merchants y Transactions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://api-sandbox.co.uat.wompi.dev/v1"
+		},
+		{
+			"key": "public_key",
+			"value": "pub_stagtest_g2u0HQd3ZMh05hsSgTS2lUV8t3s4mOt7"
+		},
+		{
+			"key": "acceptance_token",
+			"value": ""
+		},
+		{
+			"key": "personal_auth_token",
+			"value": ""
+		},
+		{
+			"key": "reference",
+			"value": ""
+		},
+		{
+			"key": "signature",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "Merchants",
+			"item": [
+				{
+					"name": "GET Merchant - Happy Path",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has merchant data', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('name');",
+									"    pm.expect(jsonData.data).to.have.property('public_key');",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"pm.collectionVariables.set('acceptance_token', jsonData.data.presigned_acceptance.acceptance_token);",
+									"pm.collectionVariables.set('personal_auth_token', jsonData.data.presigned_personal_data_auth.acceptance_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/merchants/{{public_key}}",
+							"host": ["{{base_url}}"],
+							"path": ["merchants", "{{public_key}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "POST Transaction - NEQUI Approved",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var reference = 'nequi_' + Date.now();",
+									"pm.collectionVariables.set('reference', reference);",
+									"",
+									"var integrity = 'stagtest_integrity_nAIBuqayW70XpUqJS4qf4STYiISd89Fp';",
+									"var toHash = reference + '2500000' + 'COP' + integrity;",
+									"var signature = CryptoJS.SHA256(toHash).toString();",
+									"pm.collectionVariables.set('signature', signature);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Transaction created with NEQUI', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.payment_method_type).to.eql('NEQUI');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{public_key}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount_in_cents\": 2500000,\n  \"currency\": \"COP\",\n  \"customer_email\": \"pepito_perez@example.com\",\n  \"reference\": \"{{reference}}\",\n  \"signature\": \"{{signature}}\",\n  \"acceptance_token\": \"{{acceptance_token}}\",\n  \"accept_personal_auth\": \"{{personal_auth_token}}\",\n  \"payment_method\": {\n    \"type\": \"NEQUI\",\n    \"phone_number\": \"3991111111\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/transactions",
+							"host": ["{{base_url}}"],
+							"path": ["transactions"]
+						}
+					}
+				},
+				{
+					"name": "POST Transaction - NEQUI Declined",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var reference = 'nequi_dec_' + Date.now();",
+									"pm.collectionVariables.set('reference', reference);",
+									"",
+									"var integrity = 'stagtest_integrity_nAIBuqayW70XpUqJS4qf4STYiISd89Fp';",
+									"var toHash = reference + '1500000' + 'COP' + integrity;",
+									"var signature = CryptoJS.SHA256(toHash).toString();",
+									"pm.collectionVariables.set('signature', signature);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Transaction created with NEQUI', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.payment_method_type).to.eql('NEQUI');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{public_key}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount_in_cents\": 1500000,\n  \"currency\": \"COP\",\n  \"customer_email\": \"pepito_perez@example.com\",\n  \"reference\": \"{{reference}}\",\n  \"signature\": \"{{signature}}\",\n  \"acceptance_token\": \"{{acceptance_token}}\",\n  \"accept_personal_auth\": \"{{personal_auth_token}}\",\n  \"payment_method\": {\n    \"type\": \"NEQUI\",\n    \"phone_number\": \"3992222222\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/transactions",
+							"host": ["{{base_url}}"],
+							"path": ["transactions"]
+						}
+					}
+				},
+				{
+					"name": "POST Transaction - BANCOLOMBIA_QR Approved",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var reference = 'qr_' + Date.now();",
+									"pm.collectionVariables.set('reference', reference);",
+									"",
+									"var integrity = 'stagtest_integrity_nAIBuqayW70XpUqJS4qf4STYiISd89Fp';",
+									"var toHash = reference + '2500000' + 'COP' + integrity;",
+									"var signature = CryptoJS.SHA256(toHash).toString();",
+									"pm.collectionVariables.set('signature', signature);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Transaction created with BANCOLOMBIA_QR', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.payment_method_type).to.eql('BANCOLOMBIA_QR');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{public_key}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount_in_cents\": 2500000,\n  \"currency\": \"COP\",\n  \"customer_email\": \"pepito_perez@example.com\",\n  \"reference\": \"{{reference}}\",\n  \"signature\": \"{{signature}}\",\n  \"acceptance_token\": \"{{acceptance_token}}\",\n  \"accept_personal_auth\": \"{{personal_auth_token}}\",\n  \"payment_method\": {\n    \"type\": \"BANCOLOMBIA_QR\",\n    \"payment_description\": \"Pago a Tienda Wompi\",\n    \"sandbox_status\": \"APPROVED\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/transactions",
+							"host": ["{{base_url}}"],
+							"path": ["transactions"]
+						}
+					}
+				},
+				{
+					"name": "POST Transaction - BANCOLOMBIA_TRANSFER Approved",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var reference = 'transfer_' + Date.now();",
+									"pm.collectionVariables.set('reference', reference);",
+									"",
+									"var integrity = 'stagtest_integrity_nAIBuqayW70XpUqJS4qf4STYiISd89Fp';",
+									"var toHash = reference + '2500000' + 'COP' + integrity;",
+									"var signature = CryptoJS.SHA256(toHash).toString();",
+									"pm.collectionVariables.set('signature', signature);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Transaction created with BANCOLOMBIA_TRANSFER', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.payment_method_type).to.eql('BANCOLOMBIA_TRANSFER');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{public_key}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount_in_cents\": 2500000,\n  \"currency\": \"COP\",\n  \"customer_email\": \"pepito_perez@example.com\",\n  \"reference\": \"{{reference}}\",\n  \"signature\": \"{{signature}}\",\n  \"acceptance_token\": \"{{acceptance_token}}\",\n  \"accept_personal_auth\": \"{{personal_auth_token}}\",\n  \"payment_method\": {\n    \"type\": \"BANCOLOMBIA_TRANSFER\",\n    \"payment_description\": \"Pago a Tienda Wompi\",\n    \"user_type\": \"PERSON\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/transactions",
+							"host": ["{{base_url}}"],
+							"path": ["transactions"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

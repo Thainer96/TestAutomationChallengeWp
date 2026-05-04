@@ -22,25 +22,8 @@ public class Environment {
         return getRequiredVar("PUBLIC_KEY");
     }
 
-    public static String getPrivateKey() {
-        return getRequiredVar("PRIVATE_KEY");
-    }
-
     public static String getIntegrityKey() {
         return getRequiredVar("INTEGRITY_KEY");
-    }
-
-    public static String getEventKey() {
-        return getRequiredVar("EVENT_KEY");
-    }
-
-    public static Map<String, String> getCredentials() {
-        return Map.of(
-                "public_key", getPublicKey(),
-                "private_key", getPrivateKey(),
-                "integrity", getIntegrityKey(),
-                "event", getEventKey()
-        );
     }
 
     private static String getRequiredVar(String key) {

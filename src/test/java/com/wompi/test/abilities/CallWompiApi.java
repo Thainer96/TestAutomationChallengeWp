@@ -1,7 +1,6 @@
 package com.wompi.test.abilities;
 
 import net.serenitybdd.screenplay.Ability;
-import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 
 public class CallWompiApi implements Ability {
 
@@ -19,10 +18,6 @@ public class CallWompiApi implements Ability {
 
     public String getBearer() {
         return bearer;
-    }
-
-    public CallAnApi asCallAnApi() {
-        return CallAnApi.at(baseUrl);
     }
 
     @Override

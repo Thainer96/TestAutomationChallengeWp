@@ -7,9 +7,6 @@
     </Appenders>
 
     <Loggers>
-        <logger name="org.apache.poi.openxml4j" level="INFO">
-            <appender-ref ref="Console" />
-        </logger>
         <Root level="INFO">
             <AppenderRef ref="Console" />
         </Root>

@@ -1,6 +1,7 @@
 package com.wompi.test.tasks;
 
 import com.wompi.test.abilities.CallWompiApi;
+import com.wompi.test.config.WompiEndpoint;
 import com.wompi.test.models.request.TransactionRequest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Task;
@@ -24,7 +25,7 @@ public class CreateTransaction implements Task {
     public <T extends Actor> void performAs(T actor) {
         CallWompiApi ability = actor.abilityTo(CallWompiApi.class);
         actor.attemptsTo(
-                Post.to("/transactions")
+                Post.to(WompiEndpoint.TRANSACTIONS.getPath())
                         .with(spec -> spec
                                 .header("Authorization", ability.getBearer())
                                 .header("Content-Type", "application/json")

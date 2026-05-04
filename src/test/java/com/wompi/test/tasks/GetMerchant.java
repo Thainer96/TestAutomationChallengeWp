@@ -1,5 +1,6 @@
 package com.wompi.test.tasks;
 
+import com.wompi.test.config.WompiEndpoint;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.rest.interactions.Get;
@@ -21,7 +22,7 @@ public class GetMerchant implements Task {
     @Step("{0} consulta el merchant con su llave pública")
     public <T extends Actor> void performAs(T actor) {
         actor.attemptsTo(
-                Get.resource("/merchants/" + publicKey)
+                Get.resource(WompiEndpoint.MERCHANTS.withParam("publicKey", publicKey))
         );
     }
 }
