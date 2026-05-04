@@ -104,14 +104,6 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- JUnit 4 (required by CucumberWithSerenity runner) -->
         <dependency>
             <groupId>junit</groupId>

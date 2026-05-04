@@ -12,3 +12,13 @@ Característica: Consulta de merchants
   Escenario: Consultar merchant con llave pública válida
     Cuando consulta el servicio de merchants con su llave pública
     Entonces el servicio de merchants responde exitosamente
+
+  @Merchants @Alterno
+  Escenario: Consultar merchant con llave pública inválida
+    Cuando consulta el servicio de merchants con llave pública "pub_invalid_key_12345"
+    Entonces el servicio de merchants responde con código 422
+
+  @Merchants @Alterno
+  Escenario: Consultar merchant con llave pública vacía
+    Cuando consulta el servicio de merchants con llave pública ""
+    Entonces el servicio de merchants responde con código 401

@@ -30,19 +30,6 @@ public class Environment {
         return getRequiredVar("INTEGRITY_KEY");
     }
 
-    public static String getEventKey() {
-        return getRequiredVar("EVENT_KEY");
-    }
-
-    public static Map<String, String> getCredentials() {
-        return Map.of(
-                "public_key", getPublicKey(),
-                "private_key", getPrivateKey(),
-                "integrity", getIntegrityKey(),
-                "event", getEventKey()
-        );
-    }
-
     private static String getRequiredVar(String key) {
         String fullKey = ENV_PREFIX + key;
         String value = System.getenv(fullKey);

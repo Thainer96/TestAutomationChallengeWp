@@ -81,5 +81,4 @@ target/site/serenity/index.html
 
 - NEQUI
 - BANCOLOMBIA_QR
-- PCOL
 - BANCOLOMBIA_TRANSFER

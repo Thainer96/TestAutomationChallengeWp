@@ -31,3 +31,24 @@ Característica: Creación de transacciones
       | amount_in_cents | currency | customer_email           | reference      | type                 | payment_description | user_type |
       | 2500000         | COP      | pepito_perez@example.com | 23672er3b233d8 | BANCOLOMBIA_TRANSFER | Pago a Tienda Wompi | PERSON    |
     Entonces la transacción se crea exitosamente
+
+  @Transactions @Alterno
+  Escenario: Rechazar transacción con moneda no soportada
+    Cuando crea una transacción con los siguientes datos:
+      | amount_in_cents | currency | customer_email           | reference      | type  | phone_number |
+      | 2500000         | USD      | pepito_perez@example.com | alterno_usd_01 | NEQUI | 3991111111   |
+    Entonces la transacción es rechazada con código 422
+
+  @Transactions @Alterno
+  Escenario: Rechazar transacción con monto cero
+    Cuando crea una transacción con los siguientes datos:
+      | amount_in_cents | currency | customer_email           | reference         | type  | phone_number |
+      | 0               | COP      | pepito_perez@example.com | alterno_monto0_01 | NEQUI | 3991111111   |
+    Entonces la transacción es rechazada con código 422
+
+  @Transactions @Alterno
+  Escenario: Rechazar transacción con email inválido
+    Cuando crea una transacción con los siguientes datos:
+      | amount_in_cents | currency | customer_email | reference          | type  | phone_number |
+      | 2500000         | COP      | no-es-un-email | alterno_email_01   | NEQUI | 3991111111   |
+    Entonces la transacción es rechazada con código 422
