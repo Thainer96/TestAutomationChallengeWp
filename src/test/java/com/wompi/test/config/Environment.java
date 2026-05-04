@@ -22,10 +22,6 @@ public class Environment {
         return getRequiredVar("PUBLIC_KEY");
     }
 
-    public static String getPrivateKey() {
-        return getRequiredVar("PRIVATE_KEY");
-    }
-
     public static String getIntegrityKey() {
         return getRequiredVar("INTEGRITY_KEY");
     }
