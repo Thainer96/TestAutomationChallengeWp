@@ -13,15 +13,15 @@ public class TransactionBuilder {
                                                     String acceptanceToken,
                                                     String acceptPersonalAuth,
                                                     String signature) {
-        TransactionRequest request = new TransactionRequest();
-        request.setAmountInCents(Integer.parseInt(data.get("amount_in_cents")));
-        request.setCurrency(data.get("currency"));
-        request.setCustomerEmail(data.get("customer_email"));
-        request.setReference(data.get("reference"));
-        request.setAcceptanceToken(acceptanceToken);
-        request.setAcceptPersonalAuth(acceptPersonalAuth);
-        request.setSignature(signature);
-        request.setPaymentMethod(PaymentMethodBuilder.build(data));
-        return request;
+        return TransactionRequest.builder()
+                .amountInCents(Integer.parseInt(data.get("amount_in_cents")))
+                .currency(data.get("currency"))
+                .customerEmail(data.get("customer_email"))
+                .reference(data.get("reference"))
+                .acceptanceToken(acceptanceToken)
+                .acceptPersonalAuth(acceptPersonalAuth)
+                .signature(signature)
+                .paymentMethod(PaymentMethodBuilder.build(data))
+                .build();
     }
 }

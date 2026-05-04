@@ -21,10 +21,24 @@ public class MerchantStepDefinitions {
         );
     }
 
+    @Cuando("consulta el servicio de merchants con llave pública {string}")
+    public void getMerchantsWithKey(String publicKey) {
+        OnStage.theActorInTheSpotlight().attemptsTo(
+                GetMerchant.withPublicKey(publicKey)
+        );
+    }
+
     @Entonces("el servicio de merchants responde exitosamente")
     public void verifyMerchantResponse() {
         OnStage.theActorInTheSpotlight().should(
                 seeThat(ResponseStatusCode.value(), equalTo(200))
+        );
+    }
+
+    @Entonces("el servicio de merchants responde con código {int}")
+    public void verifyMerchantResponseCode(int expectedCode) {
+        OnStage.theActorInTheSpotlight().should(
+                seeThat(ResponseStatusCode.value(), equalTo(expectedCode))
         );
     }
 

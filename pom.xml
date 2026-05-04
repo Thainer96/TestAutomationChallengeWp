@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.wompi.test</groupId>
@@ -25,6 +25,7 @@
 
         <!-- Logging -->
         <log4j2.version>2.24.3</log4j2.version>
+        <lombok.version>1.18.36</lombok.version>
 
         <!-- Build plugins -->
         <maven.surefire.version>3.5.2</maven.surefire.version>
@@ -33,6 +34,13 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Serenity BDD Core -->
         <dependency>
             <groupId>net.serenity-bdd</groupId>
@@ -94,6 +102,7 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- JUnit 4 (required by CucumberWithSerenity runner) -->

@@ -12,10 +12,6 @@ public class MerchantData implements Question<String> {
         this.jsonPath = jsonPath;
     }
 
-    public static MerchantData field(String jsonPath) {
-        return new MerchantData(jsonPath);
-    }
-
     public static MerchantData acceptanceToken() {
         return new MerchantData("data.presigned_acceptance.acceptance_token");
     }
